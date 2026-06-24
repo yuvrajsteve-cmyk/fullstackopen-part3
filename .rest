@@ -40,3 +40,39 @@ Content-Type: application/json
     "number": "6304-442652"
 }
 
+### add the fourth person 
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "arto hellas",
+    "number": "111-2222"
+}
+
+### ਟੈਸਟ 1: ਨਾਮ ਗਾਇਬ ਕਰਕੇ ਦੇਖੋ (Missing Name)
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "number": "6304-442652"
+}
+
+### -----------------------------------------------------
+
+### ਟੈਸਟ 2: ਡੁਪਲੀਕੇਟ ਨਾਮ (Duplicate Name)
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": "6304-442652"
+}
+
+### ਟੈਸਟ 2: ਡੁਪਲੀਕੇਟ ਨਾਮ (Duplicate Name)
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": "6304-442652"
+}
