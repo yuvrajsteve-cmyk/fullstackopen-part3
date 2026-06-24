@@ -8,3 +8,35 @@ GET http://localhost:3001/api/persons/2
 
 
 DELETE http://localhost:3001/api/persons/
+
+### add a new person with POST mehtod
+
+
+### add the first person
+POST  http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Yuvraj Singh",
+    "number": "6304-442652"
+}
+
+### add the second person
+POST  http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Satinderpal Singh",
+    "number": "6304-442652"
+}
+
+### add the third person
+
+POST  http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Jasspreet Singh",
+    "number": "6304-442652"
+}
+
