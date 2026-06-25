@@ -95,3 +95,12 @@ Content-Type: application/json
     "name": "Karan Singh",
     "number": "433-5677545"
 }
+
+### add another name of my friend
+POST http://localhost:3001/api/persons
+Content-Type:  application/json
+
+{
+    "name" : "Captain Rogers",
+    "number": "6280-5524-93"
+}
