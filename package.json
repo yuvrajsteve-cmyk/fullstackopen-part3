@@ -17,6 +17,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
+    "build:ui": "rm -rf dist && cd ../fso-part_2/phonebook && npm run build && cp -r dist ../../fso-part_3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
