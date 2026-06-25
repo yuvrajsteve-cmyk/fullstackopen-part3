@@ -76,3 +76,22 @@ Content-Type: application/json
     "name": "Arto Hellas",
     "number": "6304-442652"
 }
+
+
+### addd the another name
+POST http://localhost:3001/api/persons
+Content-Type:  application/json
+
+{
+    "name": "jaskaran Singh",
+    "number": "5333-44234"
+}
+
+### add another person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Karan Singh",
+    "number": "433-5677545"
+}
