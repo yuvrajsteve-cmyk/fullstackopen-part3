@@ -1,0 +1,19 @@
+### delete request
+DELETE  http://localhost:3001/api/notes/1
+Content-Type: application/json
+
+
+
+### get request
+GET http://localhost:3001/api/notes/
+Content-Type: application/json
+
+### send the post request
+POST http://localhost:3001/api/notes/ 
+Content-Type: application/json
+
+{
+    "id": "5",
+    "name": "Mr. Stark",
+    "important": "true"
+}
