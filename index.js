@@ -133,6 +133,17 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
   })
 
+  // exercise 3.18 with info
+  app.get('/info', (request, response, next) => {
+    Person.countDocuments({}).then(count => {
+      const date = new Date()
+      response.send(`<p>Phonebook has info for ${count} people</p>
+        <p>${date}</p>
+        `)
+    })
+    .catch(error => next(error))
+  })
+
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`)
