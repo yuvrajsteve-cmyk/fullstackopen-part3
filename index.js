@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const Person = require(`./models/Persons`)
 const Notes = require('./models/Notes')
-const { errorHandler } = require('./Middleware/errorHandler')
+const errorHandler = require('./Middleware/errorHandler')
 
 
 app.use(express.static('dist'))
@@ -39,22 +39,20 @@ mongoose.connect(url)
     
   // use the post method to add the data 
 
-  app.post('/api/persons', (request, response) => {
-    const body = request.body
+  app.post('/api/persons', (request, response, next) => {
+  const body = request.body
 
-    if (!body.name || !body.number) {
-      return response.status(400).json({error: 'name or number is missing'})
-    }
+  const person = new Person ({
+    name: body.name,
+    number: body.number,
+  })
 
-    const person = new Person ({
-      name: body.name,
-      number: body.number,
-    })
-
-    person.save().then(savedPerson => {
+  person.save()
+    .then(savedPerson => {
       response.json(savedPerson)
     })
-  })
+    .catch(error => next(error)) 
+})
 
   // send the get  rquest with notes
   app.get('/api/notes', (request,  response) => {
@@ -78,6 +76,7 @@ mongoose.connect(url)
     note.save().then(savedNote => {
       response.json(savedNote)
     })
+    .catch(error => next(error))
   })
 
  // use the id method for the notes
@@ -117,15 +116,24 @@ app.get('/api/persons/:id', (request, response, next) => {
 //   next(error)
 // }
 
-  // app use handler ithe use kita hoya aa
-  app.use(errorHandler)
+  
 
   // use the delete route for the persons.js
+  // DELETE route for persons
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+  // use the update route for persons.js
   app.put('/api/persons/:id', (request, response, next) => {
     const { name, number} = request.body
     Person.findByIdAndUpdate(request.params.id,
       { name, number },
-      { new: true, runValidators: true}
+      { new: true, runValidators: true, context: 'query'}
     )
     .then(updatedPerson => {
       response.json(updatedPerson)
@@ -143,6 +151,9 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
     .catch(error => next(error))
   })
+
+  // app use handler ithe use kita hoya aa
+  app.use(errorHandler)
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {

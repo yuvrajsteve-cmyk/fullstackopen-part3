@@ -12,7 +12,7 @@ GET http://localhost:3001/api/persons
 Content-Type: application/json
 
 ### send the delete request
-DELETE http://localhost:3001/api/persons/6a420dcb1e0f9a7b4c57befa
+DELETE http://localhost:3001/api/persons/6a4240b6364cc40ffa0d0d65
 Content-Type: application/json
 
 ### send the put request to the persons
