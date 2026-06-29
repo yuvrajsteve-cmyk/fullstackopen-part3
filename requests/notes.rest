@@ -13,7 +13,6 @@ POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
-    "id": "5",
-    "name": "Mr. Stark",
+    "content": "Yuvraj Singh",
     "important": "true"
 }

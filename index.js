@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const Person = require(`./models/Persons`)
+const Notes = require('./models/Notes')
 
 
 app.use(express.static('dist'))
@@ -11,6 +12,7 @@ app.use(express.json())
 
 
 const mongoose =  require('mongoose')
+const Persons = require('./models/Persons')
 const url = process.env.MONGO_URI
 
 console.log(`connecting to the ${url}`)
@@ -53,8 +55,69 @@ mongoose.connect(url)
     })
   })
 
+  // send the get  rquest with notes
+  app.get('/api/notes', (request,  response) => {
+    Notes.find({}).then(note => {
+      response.json(note)
+    })
+})
+   
+  // use the post method in the notes 
+  app.post('/api/notes', (request, response) => {
+    const body = request.body
 
+    if (!body.content || !body.important) {
+      return response.status(400).json({error: 'content is missing'})
+    }
+    const note = new Notes ({
+      content : body.content,
+      important : body.important,
+    })
 
+    note.save().then(savedNote => {
+      response.json(savedNote)
+    })
+  })
+
+ // use the id method for the notes
+  app.get('/api/notes/:id', (request, response, next) => {
+  Notes.findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note) // ਮਿਲ ਗਿਆ ਤਾਂ ਡਾਟਾ ਭੇਜੋ
+      } else {
+        response.status(404).end() // ਨਹੀਂ ਮਿਲਿਆ ਤਾਂ 404
+      }
+    })
+    .catch(error => next(error)) // Error Handler ਨੂੰ ਗਲਤੀ ਫੜਾਓ
+})
+
+  // use the id method for the persons
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
+ 
+
+  const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+// ਇਹ ਲਾਈਨ ਸਾਰੇ ਰੂਟਸ ਤੋਂ ਬਾਅਦ ਲਿਖਣੀ ਹੈ
+app.use(errorHandler)
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
