@@ -107,18 +107,31 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
  
 
-  const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+//   const errorHandler = (error, request, response, next) => {
+//   console.error(error.message)
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  }
+//   if (error.name === 'CastError') {
+//     return response.status(400).send({ error: 'malformatted id' })
+//   }
 
-  next(error)
-}
+//   next(error)
+// }
 
   // app use handler ithe use kita hoya aa
   app.use(errorHandler)
+
+  // use the delete route for the persons.js
+  app.put('/api/persons/:id', (request, response, next) => {
+    const { name, number} = request.body
+    Person.findByIdAndUpdate(request.params.id,
+      { name, number },
+      { new: true, runValidators: true}
+    )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+  })
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {

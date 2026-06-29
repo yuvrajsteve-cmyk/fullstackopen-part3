@@ -2,14 +2,14 @@
 
  // complete the exercise 3.15: Phonebook database, step 3
 
-   app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndDelete(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-   })
+  const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
-app.use(errorHandler)
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
 
 module.exports = { errorHandler }
