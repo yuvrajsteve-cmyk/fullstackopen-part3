@@ -1,48 +1,36 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const Person = require(`./models/Persons`)
+const Person = require('./models/Persons') 
 const Notes = require('./models/Notes')
 const errorHandler = require('./Middleware/errorHandler')
-
 
 app.use(express.static('dist'))
 app.use(express.json())
 
-
-
-
-const mongoose =  require('mongoose')
-const Persons = require('./models/Persons')
+const mongoose = require('mongoose')
 const url = process.env.MONGO_URI
 
 console.log(`connecting to the ${url}`)
 
-
-
 mongoose.connect(url)
-  .then(result => {
-    console.log(`connected to mongoDB`)
+  .then(() => { 
+    console.log('connected to mongoDB')
   })
   .catch((error) => {
-    console.log(`error to connecting to mongoDB`, error.message)
+    console.log('error connecting to mongoDB', error.message)
   })
 
-
-
-
-  app.get('/api/persons', (request, response) => {
-    Person.find({}).then(people => {
-        response.json(people)
-    })
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(people => {
+    response.json(people)
   })
-    
-  // use the post method to add the data 
+})
 
-  app.post('/api/persons', (request, response, next) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  const person = new Person ({
+  const person = new Person({
     name: body.name,
     number: body.number,
   })
@@ -51,48 +39,45 @@ mongoose.connect(url)
     .then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => next(error)) 
-})
-
-  // send the get  rquest with notes
-  app.get('/api/notes', (request,  response) => {
-    Notes.find({}).then(note => {
-      response.json(note)
-    })
-})
-   
-  // use the post method in the notes 
-  app.post('/api/notes', (request, response) => {
-    const body = request.body
-
-    if (!body.content || !body.important) {
-      return response.status(400).json({error: 'content is missing'})
-    }
-    const note = new Notes ({
-      content : body.content,
-      important : body.important,
-    })
-
-    note.save().then(savedNote => {
-      response.json(savedNote)
-    })
     .catch(error => next(error))
+})
+
+app.get('/api/notes', (request, response) => {
+  Notes.find({}).then(note => {
+    response.json(note)
+  })
+})
+
+
+app.post('/api/notes', (request, response, next) => { 
+  const body = request.body
+
+  if (!body.content || !body.important) {
+    return response.status(400).json({ error: 'content is missing' })
+  }
+  const note = new Notes({
+    content: body.content,
+    important: body.important,
   })
 
- // use the id method for the notes
-  app.get('/api/notes/:id', (request, response, next) => {
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
+    .catch(error => next(error))
+})
+
+app.get('/api/notes/:id', (request, response, next) => {
   Notes.findById(request.params.id)
     .then(note => {
       if (note) {
-        response.json(note) 
+        response.json(note)
       } else {
-        response.status(404).end() 
+        response.status(404).end()
       }
     })
-    .catch(error => next(error)) 
+    .catch(error => next(error))
 })
 
-  // use the id method for the persons
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
@@ -104,8 +89,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
- 
-// DELETE route for persons
+
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(() => {
@@ -114,34 +98,32 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-  // use the update route for persons.js
-  app.put('/api/persons/:id', (request, response, next) => {
-    const { name, number} = request.body
-    Person.findByIdAndUpdate(request.params.id,
-      { number: body.number },
-      { new: true, runValidators: true, context: 'query'}
-    )
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body 
+  
+  Person.findByIdAndUpdate(request.params.id,
+    { number: body.number },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
     .catch(error => next(error))
-  })
+})
 
-  // exercise 3.18 with info
-  app.get('/info', (request, response, next) => {
-    Person.countDocuments({}).then(count => {
-      const date = new Date()
-      response.send(`<p>Phonebook has info for ${count} people</p>
+app.get('/info', (request, response, next) => {
+  Person.countDocuments({}).then(count => {
+    const date = new Date()
+    response.send(`<p>Phonebook has info for ${count} people</p>
         <p>${date}</p>
         `)
-    })
+  })
     .catch(error => next(error))
-  })
+})
 
-  // app use handler ithe use kita hoya aa
-  app.use(errorHandler)
+app.use(errorHandler)
 
-  const PORT = process.env.PORT || 3001
-  app.listen(PORT, () => {
-    console.log(`server is running on port ${PORT}`)
-  })
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`)
+})
