@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const Person = require(`./models/Persons`)
 const Notes = require('./models/Notes')
+const { errorHandler } = require('./Middleware/errorHandler')
 
 
 app.use(express.static('dist'))
@@ -116,18 +117,8 @@ app.get('/api/persons/:id', (request, response, next) => {
   next(error)
 }
 
-
-   // complete the exercise 3.15: Phonebook database, step 3
-
-   app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndDelete(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-   })
-
-app.use(errorHandler)
+  // app use handler ithe use kita hoya aa
+  app.use(errorHandler)
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
