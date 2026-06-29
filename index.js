@@ -105,21 +105,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
  
-
-//   const errorHandler = (error, request, response, next) => {
-//   console.error(error.message)
-
-//   if (error.name === 'CastError') {
-//     return response.status(400).send({ error: 'malformatted id' })
-//   }
-
-//   next(error)
-// }
-
-  
-
-  // use the delete route for the persons.js
-  // DELETE route for persons
+// DELETE route for persons
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(() => {
