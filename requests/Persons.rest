@@ -6,3 +6,7 @@ Content-Type: application/json
     "name": "Yuvraj Singh",
     "number": "6280445789"
 }
+
+### send the delete request
+DELETE http://localhost:3001/api/persons/6a420dcb1e0f9a7b4c57befa
+Content-Type: application/json

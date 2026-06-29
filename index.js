@@ -84,12 +84,12 @@ mongoose.connect(url)
   Notes.findById(request.params.id)
     .then(note => {
       if (note) {
-        response.json(note) // ਮਿਲ ਗਿਆ ਤਾਂ ਡਾਟਾ ਭੇਜੋ
+        response.json(note) 
       } else {
-        response.status(404).end() // ਨਹੀਂ ਮਿਲਿਆ ਤਾਂ 404
+        response.status(404).end() 
       }
     })
-    .catch(error => next(error)) // Error Handler ਨੂੰ ਗਲਤੀ ਫੜਾਓ
+    .catch(error => next(error)) 
 })
 
   // use the id method for the persons
@@ -116,7 +116,17 @@ app.get('/api/persons/:id', (request, response, next) => {
   next(error)
 }
 
-// ਇਹ ਲਾਈਨ ਸਾਰੇ ਰੂਟਸ ਤੋਂ ਬਾਅਦ ਲਿਖਣੀ ਹੈ
+
+   // complete the exercise 3.15: Phonebook database, step 3
+
+   app.delete('/api/persons/:id', (request, response, next) => {
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+   })
+
 app.use(errorHandler)
 
   const PORT = process.env.PORT || 3001
